@@ -14,7 +14,8 @@ namespace DogIdentification.ViewModels
         {
             TakePhotoCommand = new Command(async () =>
             {
-                var stream = await TakePhotoAsync();
+                var photo = new Photo();
+                var stream = await photo.TakePhotoAsync();
                 if (stream != null) 
                 {   
                     Photo = ImageSource.FromStream(() => { return stream; });
@@ -45,20 +46,5 @@ namespace DogIdentification.ViewModels
         public Command TakePhotoCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        async Task<System.IO.Stream> TakePhotoAsync()
-        {
-            try
-            {
-                var photo = await MediaPicker.CapturePhotoAsync();
-                var stream = await photo.OpenReadAsync();
-                return stream;
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"There was error during making a photo: {ex.Message}");
-                return null;
-            }
-        }
     }   
 }
