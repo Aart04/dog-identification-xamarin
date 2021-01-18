@@ -22,7 +22,7 @@
 
         <Image Grid.Row="0"
                Grid.Column="0"
-               Source="pug_example" />
+               Source="{Binding Photo}" />
 
         <Button Text="Take a Photo"
                 Grid.Row="4"

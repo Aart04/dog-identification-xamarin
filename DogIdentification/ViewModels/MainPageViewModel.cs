@@ -4,10 +4,11 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace DogIdentification.ViewModels
 {
-    class MainPageViewModel
+    class MainPageViewModel: INotifyPropertyChanged
     {
         public MainPageViewModel()
         {
@@ -15,7 +16,8 @@ namespace DogIdentification.ViewModels
             {
                 var stream = await TakePhotoAsync();
                 if (stream != null) 
-                {
+                {   
+                    Photo = ImageSource.FromStream(() => { return stream; });
                     Console.WriteLine("Photo was taken");
                 }
                 else
@@ -25,8 +27,24 @@ namespace DogIdentification.ViewModels
             });
         }
 
+        ImageSource photo;
+        public ImageSource Photo 
+        { 
+            get => photo;
+            set 
+            {
+                photo = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(Photo)));
 
+                TakePhotoCommand.ChangeCanExecute();
+            } 
+        }
+
+            
         public Command TakePhotoCommand { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         async Task<System.IO.Stream> TakePhotoAsync()
         {
