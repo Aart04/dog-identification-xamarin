@@ -11,9 +11,17 @@ namespace DogIdentification.ViewModels
     {
         public MainPageViewModel()
         {
-            TakePhotoCommand = new Command(() =>
+            TakePhotoCommand = new Command(async () =>
             {
-                //Taking Photo logic
+                var stream = await TakePhotoAsync();
+                if (stream != null) 
+                {
+                    Console.WriteLine("Photo was taken");
+                }
+                else
+                {
+                    Console.WriteLine("Photo wasn't taken");
+                }
             });
         }
 
