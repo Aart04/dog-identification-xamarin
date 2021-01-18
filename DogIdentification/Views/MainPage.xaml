@@ -22,7 +22,7 @@
                 Grid.Row="4"
                 Grid.Column="0" 
                 Margin="30,0"
-                Command="{Binding TakePhotoComand}"/>
+                Command="{Binding TakePhotoCommand}"/>
 
     </Grid>
 
