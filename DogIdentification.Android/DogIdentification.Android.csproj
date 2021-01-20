@@ -67,6 +67,7 @@
     <Compile Include="TensorflowClassifier.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\dog-identification.tflite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -89,7 +90,9 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidAsset Include="Assets\labels.txt" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DogIdentification\DogIdentification.csproj">
       <Project>{D63742A1-9570-404D-885A-1AAB08E65C9F}</Project>
