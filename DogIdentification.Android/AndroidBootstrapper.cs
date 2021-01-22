@@ -16,7 +16,7 @@ namespace DogIdentification.Droid
     {
         public void Init(ContainerBuilder builder)
         {
-            builder.RegisterType<TensorflowClassifier>().Keyed<IClassifier>("OfflineInceptionModel");
+            builder.RegisterType<TensorflowClassifier>().As<IClassifier>();
         }
     }
 }

@@ -5,13 +5,22 @@ using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using Autofac;
 
 namespace DogIdentification.ViewModels
 {
     class MainPageViewModel: INotifyPropertyChanged
     {
+        private IClassifier offlineInceptionV3Model;
+
         public MainPageViewModel()
         {
+            using (var scope = Bootstrapper.Container.BeginLifetimeScope())
+            {
+                offlineInceptionV3Model = scope.Resolve<IClassifier>();
+            }
+
+
             TakePhotoCommand = new Command(async () =>
             {
                 var photo = new Photo();
@@ -25,6 +34,11 @@ namespace DogIdentification.ViewModels
                 {
                     Console.WriteLine("Photo wasn't taken");
                 }
+
+                byte[] bytesArray = new byte[5];
+
+                await offlineInceptionV3Model.Classify(bytesArray);
+
             });
         }
 

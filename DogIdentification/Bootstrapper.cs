@@ -10,6 +10,7 @@ namespace DogIdentification
     public static class Bootstrapper
     {
         public static IBootstrapper PlatformSpecific;
+        public static IContainer Container;
 
         public static void Init(Application app)
         {
@@ -18,8 +19,8 @@ namespace DogIdentification
             PlatformSpecific.Init(builder);
 
 
-            var container = builder.Build();
-            DependencyResolver.ResolveUsing(type => container.IsRegistered(type) ? container.Resolve(type) : null);
+            Container = builder.Build();
+            DependencyResolver.ResolveUsing(type => Container.IsRegistered(type) ? Container.Resolve(type) : null);
         }
     }
 

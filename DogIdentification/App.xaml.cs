@@ -10,6 +10,8 @@ namespace DogIdentification
         {
             InitializeComponent();
 
+            Bootstrapper.Init(this);
+
             MainPage = new MainPage();
         }
 

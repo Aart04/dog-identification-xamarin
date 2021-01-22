@@ -23,24 +23,25 @@ namespace DogIdentification.Droid
 
         public async Task Classify(byte[] bytes)
         {
-            var modelByteBuffer = LoadModel("dog-identification"); 
+            var modelByteBuffer = LoadModel("dog-identification.tflite"); 
             var interpreter = new Xamarin.TensorFlow.Lite.Interpreter(modelByteBuffer);
 
             var inputTensor = interpreter.GetInputTensor(0);
 
             var shape = inputTensor.Shape();
-            
+
+            var width = shape[1];
+            var height = shape[2];
         }
             
-        private ByteBuffer LoadModel(string path)
+        private MappedByteBuffer LoadModel(string path)
         {
             var assetDescriptor = Application.Context.Assets.OpenFd(path);
             var stream = new FileInputStream(assetDescriptor.FileDescriptor);
-
-            ByteBuffer byteBuffer = ByteBuffer.Allocate(stream.Available());
-            var channel = stream.Channel.Read(byteBuffer);
-            
-            return byteBuffer; 
+            var mappedByteBuffer = stream.Channel.Map(FileChannel.MapMode.ReadOnly, assetDescriptor.StartOffset, assetDescriptor.DeclaredLength);
+            return mappedByteBuffer; 
         }
+
+
     }
 }
