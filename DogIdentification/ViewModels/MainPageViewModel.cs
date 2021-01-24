@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using Autofac;
+using System.IO;
 
 namespace DogIdentification.ViewModels
 {
@@ -34,8 +35,11 @@ namespace DogIdentification.ViewModels
                 {
                     Console.WriteLine("Photo wasn't taken");
                 }
+                var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+                
 
-                byte[] bytesArray = new byte[5];
+                byte[] bytesArray = memoryStream.ToArray();
 
                 await offlineInceptionV3Model.Classify(bytesArray);
 
