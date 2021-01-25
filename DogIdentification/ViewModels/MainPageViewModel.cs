@@ -24,11 +24,14 @@ namespace DogIdentification.ViewModels
 
             TakePhotoCommand = new Command(async () =>
             {
-                var photo = new Photo();
-                var stream = await photo.TakePhotoAsync();
-
+                var photo = await MediaPicker.CapturePhotoAsync();
+                
+                var stream = await photo.OpenReadAsync();
+                
                 var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
+                await stream.CopyToAsync(memoryStream);
+
+                stream = await photo.OpenReadAsync();
 
                 if (stream != null) 
                 {   
