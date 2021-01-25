@@ -26,6 +26,10 @@ namespace DogIdentification.ViewModels
             {
                 var photo = new Photo();
                 var stream = await photo.TakePhotoAsync();
+
+                var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+
                 if (stream != null) 
                 {   
                     Photo = ImageSource.FromStream(() => { return stream; });
@@ -35,14 +39,10 @@ namespace DogIdentification.ViewModels
                 {
                     Console.WriteLine("Photo wasn't taken");
                 }
-                var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-                
 
                 byte[] bytesArray = memoryStream.ToArray();
 
                 await offlineInceptionV3Model.Classify(bytesArray);
-
             });
         }
 

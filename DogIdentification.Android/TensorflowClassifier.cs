@@ -55,14 +55,18 @@ namespace DogIdentification.Droid
             var input = GetPhotoAsByteBuffer(bytes, width, height);
 
 
-            var outputLocations = new float[1][] { new float[120] };
+            var outputLocations = new float[1][] { new float[labels.Count] };
             var outputs = Java.Lang.Object.FromArray(outputLocations);
 
             interpreter.Run(input, outputs);
 
             var classificationResults = outputs.ToArray<float[]>();
 
-            System.Console.WriteLine(classificationResults);
+            System.Console.WriteLine("I got results: ");
+            for (int i = 0; i < classificationResults[0].Length; i++)
+            {
+                System.Console.WriteLine($"{labels[i]} : {classificationResults[0][i]}");
+            }
         }
             
         private MappedByteBuffer LoadModel(string path)
