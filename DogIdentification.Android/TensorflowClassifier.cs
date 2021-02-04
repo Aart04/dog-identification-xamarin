@@ -22,7 +22,7 @@ namespace DogIdentification.Droid
     {
         const int FloatSize = 4;
         const int PixelSize = 3;
-
+        const float TensorflowInputScale = 255.0f;
 
         public event EventHandler<ClassificationEventArgs> ClassificationCompleted;
 
@@ -79,9 +79,11 @@ namespace DogIdentification.Droid
 
         private ByteBuffer GetPhotoAsByteBuffer(byte[] image, int width, int height)
         {
-            var bitmap = BitmapFactory.DecodeByteArray(image, 0, image.Length);
-            var resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
 
+            var bitmap = BitmapFactory.DecodeByteArray(image, 0, image.Length);
+            
+            var resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
+            
             var modelInputSize = FloatSize * height * width * PixelSize;
             var byteBuffer = ByteBuffer.AllocateDirect(modelInputSize);
             byteBuffer.Order(ByteOrder.NativeOrder());
@@ -98,9 +100,9 @@ namespace DogIdentification.Droid
                 {
                     var pixelVal = pixels[pixel++];
 
-                    byteBuffer.PutFloat(pixelVal >> 16 & 0xFF);
-                    byteBuffer.PutFloat(pixelVal >> 8 & 0xFF);
-                    byteBuffer.PutFloat(pixelVal & 0xFF);
+                    byteBuffer.PutFloat(((pixelVal >> 16) & 0xFF)/ TensorflowInputScale);
+                    byteBuffer.PutFloat(((pixelVal >> 8) & 0xFF)/ TensorflowInputScale);
+                    byteBuffer.PutFloat(((pixelVal) & 0xFF)/ TensorflowInputScale);
                 }
             }
 
