@@ -24,6 +24,12 @@
                Grid.Column="0"
                Source="{Binding Photo}" />
 
+        <Button Text="Pick a Photo"
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="30,0"
+                Command="{Binding PickPhotoCommand}"/>
+
         <Button Text="Take a Photo"
                 Grid.Row="4"
                 Grid.Column="0" 

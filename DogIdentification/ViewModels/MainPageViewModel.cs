@@ -12,6 +12,10 @@ namespace DogIdentification.ViewModels
 {
     class MainPageViewModel: INotifyPropertyChanged
     {
+        public Command TakePhotoCommand { get; }
+        public Command PickPhotoCommand { get; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private IClassifier offlineInceptionV3Model;
 
         public MainPageViewModel()
@@ -47,6 +51,32 @@ namespace DogIdentification.ViewModels
 
                 await offlineInceptionV3Model.Classify(bytesArray);
             });
+
+            PickPhotoCommand = new Command(async () =>
+            {
+                var photo = await MediaPicker.PickPhotoAsync();
+
+                var stream = await photo.OpenReadAsync();
+
+                var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+
+                stream = await photo.OpenReadAsync();
+
+                if (stream != null)
+                {
+                    Photo = ImageSource.FromStream(() => { return stream; });
+                    Console.WriteLine("Photo was picked");
+                }
+                else
+                {
+                    Console.WriteLine("Photo wasn't picked");
+                }
+
+                byte[] bytesArray = memoryStream.ToArray();
+
+                await offlineInceptionV3Model.Classify(bytesArray);
+            });
         }
 
         ImageSource photo;
@@ -62,10 +92,5 @@ namespace DogIdentification.ViewModels
                 TakePhotoCommand.ChangeCanExecute();
             } 
         }
-
-            
-        public Command TakePhotoCommand { get; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }   
 }
