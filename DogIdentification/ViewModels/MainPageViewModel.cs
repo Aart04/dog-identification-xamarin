@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using Autofac;
 using System.IO;
+using System.Linq;
 
 namespace DogIdentification.ViewModels
 {
@@ -49,6 +50,8 @@ namespace DogIdentification.ViewModels
 
                 byte[] bytesArray = memoryStream.ToArray();
 
+                offlineInceptionV3Model.ClassificationCompleted += Classifier_ClassificationCompleted;
+
                 await offlineInceptionV3Model.Classify(bytesArray);
             });
 
@@ -75,9 +78,25 @@ namespace DogIdentification.ViewModels
 
                 byte[] bytesArray = memoryStream.ToArray();
 
+                offlineInceptionV3Model.ClassificationCompleted += Classifier_ClassificationCompleted;
+
                 await offlineInceptionV3Model.Classify(bytesArray);
             });
         }
+
+        private void Classifier_ClassificationCompleted(object sender, ClassificationEventArgs e)
+        {
+            var sortedList = e.Predictions.OrderByDescending(x => x.Probability);
+
+            var top_prediction = sortedList.First();
+
+            String results = "This is: " + top_prediction.TagName + " \n Accuracy: " + top_prediction.Probability*100;
+
+            ResultInfo = results;
+
+            ((IClassifier)sender).ClassificationCompleted -= Classifier_ClassificationCompleted;
+        }
+        
 
         ImageSource photo;
         public ImageSource Photo 
@@ -91,6 +110,18 @@ namespace DogIdentification.ViewModels
 
                 TakePhotoCommand.ChangeCanExecute();
             } 
+        }
+
+        String resultInfo;
+        public String ResultInfo
+        {
+            get => resultInfo;
+            set
+            {
+                resultInfo = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(ResultInfo)));
+            }
         }
     }   
 }

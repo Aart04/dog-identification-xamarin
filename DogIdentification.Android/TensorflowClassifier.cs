@@ -15,6 +15,7 @@ using Java.Nio;
 using Java.Nio.Channels;
 using System.IO;
 using Android.Graphics;
+using DogIdentification.Models;
 
 namespace DogIdentification.Droid
 {
@@ -67,6 +68,16 @@ namespace DogIdentification.Droid
             {
                 System.Console.WriteLine($"{labels[i]} : {classificationResults[0][i]}");
             }
+
+            var results = new List<Classification>();
+
+            for (var i = 0; i < labels.Count; i++)
+            {
+                var label = labels[i];
+                results.Add(new Classification(label, classificationResults[0][i]));
+            }
+
+            ClassificationCompleted?.Invoke(this, new ClassificationEventArgs(results));
         }
             
         private MappedByteBuffer LoadModel(string path)

@@ -24,6 +24,12 @@
                Grid.Column="0"
                Source="{Binding Photo}" />
 
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               HorizontalOptions="Center"
+               FontSize="Title"
+               Text="{Binding ResultInfo}" />
+
         <Button Text="Pick a Photo"
                 Grid.Row="3"
                 Grid.Column="0"
